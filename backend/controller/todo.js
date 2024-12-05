@@ -2,7 +2,7 @@ const todo = require("../models/todo");
 
 exports.postTodo = async (req, res) => {
     try {
-        const title = req.body;
+        const {title} = req.body;
         if(!title || !title.trim()){
             return res.status(400).json({message: "Required field missing."})
         }
@@ -10,6 +10,7 @@ exports.postTodo = async (req, res) => {
         await newTodo.save();
         return res.status(201).json({message: "new todo added."})
     } catch (error) {
+        console.log(error);
         return res.status(500).json({message: "Something went wrong! Could not create new todo", error});
     }
 }
@@ -28,13 +29,17 @@ exports.updateTodo = async (req, res) => {
         const reqBody = req.body;
         const todoId = req.params.id;
         const title = typeof(reqBody.title) == "string" && reqBody.title.trim().length > 0 ? reqBody.title.trim() : "";
-        const completed = typeof(reqBody.completed) == "boolean" && [true, false].indexOf(reqBody.completed) > -1 ? reqBody.completed : undefined;
+        const accomplished = typeof (reqBody.accomplished) == "boolean" && [true, false].indexOf(reqBody.accomplished) > -1 ? reqBody.accomplished : undefined;
+        const completed = typeof (reqBody.completed) == "number" && reqBody.completed > 0 ? new Date(reqBody.completed) : undefined;
         if(!todoId){
             return res.status(400).json({message: "required id missing."})
         }
         let obj = {};
         if(title){
             obj.title = title;
+        }
+        if(accomplished != undefined){
+            obj.accomplished = accomplished;
         }
         if(completed != undefined){
             obj.completed = completed;
@@ -46,7 +51,7 @@ exports.updateTodo = async (req, res) => {
     }
 }
 
-exports.deleteTodo = async () => {
+exports.deleteTodo = async (req, res) => {
     try {
         const todoId = req.params.id;
         if(!todoId){

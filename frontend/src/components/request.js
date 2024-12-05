@@ -7,15 +7,13 @@ export const apiRequest = async (method, uri, body = null) => {
             },
             body: body ? JSON.stringify(body) : null,
         });
-
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
         }
 
         const data = await response.json();
-        return data;
+        return {data, response};
     } catch (error) {
-        console.error('Request failed:', error);
-        throw error; 
+        console.log('Request failed:', error);
     }
 };
