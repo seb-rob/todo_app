@@ -6,8 +6,18 @@ const mongoConnect = async () => {
         console.log("mongodb connected");
     } catch (error) {
         console.log("could not connect to mongo");
-        console.error("error: ", error);
+        console.error("Error connecting mongo", error);
+        throw error;
     }
 }
 
-module.exports = mongoConnect;
+const mongoDisconnect = async () => {
+    try {
+        await mongoose.disconnect();
+        console.log("mongo disconnected");
+    } catch (error) {
+        console.log("Error disconnecting mongo ", error)
+    }
+}
+
+module.exports = { mongoConnect, mongoDisconnect };

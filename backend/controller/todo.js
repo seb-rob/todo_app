@@ -20,7 +20,7 @@ exports.getTodo = async (req, res) => {
         const todos = await todo.find();
         return res.status(200).json({message: "ok", todos});
     } catch (error) {
-        return res.status(500).json({message: "Something went wrong! Could not fetch todos", error});
+        return res.status(500).json({message: "Something went wrong! Could not fetch todos", error: error.message});
     }
 }
 
