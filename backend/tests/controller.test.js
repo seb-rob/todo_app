@@ -103,7 +103,7 @@ describe("When todo controller is invoked", () => {
     //     });
 
         it("Should return 'required id missing.', if :id params is not present", async () => {
-            const message = "required id missing.";
+            const message = "Invalid or missing todo ID.";
             req.params = { };
             mockFindByIdAndUpdate.mockResolvedValue(message);
             await controller.updateTodo(req, res);
