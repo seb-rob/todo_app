@@ -17,7 +17,7 @@ function TodoInput() {
           <input
             type="text"
             className="form-control"
-            placeholder="My next goal.."
+            placeholder="my next goal"
             aria-label="Recipient's username"
             aria-describedby="button-addon2"
             value={text}
@@ -28,7 +28,7 @@ function TodoInput() {
                 type="submit"
                 id="button-addon2"
             >
-              Button
+              add task
             </button>
         </form>
     )

@@ -22,7 +22,7 @@ function Lists() {
           setAccList(filterAccList);
         }
       } catch (error) {
-        console.error("Error fetching todo list:", error);
+        console.log("Error fetching todo list:", error);
       }
     };
     onRenderFetch();
