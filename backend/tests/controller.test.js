@@ -11,7 +11,6 @@ const mockFindByIdAndDelete = jest.fn();
 Todo.find = mockFind;
 Todo.mockImplementation(() => ({ save: mockSave }));
 Todo.findByIdAndUpdate = mockFindByIdAndUpdate;
-// Todo.mockImplementation(() => ({ findByIdAndUpdate: mockFindByIdAndUpdate }))
 Todo.findByIdAndDelete = mockFindByIdAndDelete;
 
 describe("When todo controller is invoked", () => {
@@ -91,50 +90,54 @@ describe("When todo controller is invoked", () => {
     });
 
     describe("For PUT updateTodo function", () => {
-    //     it("Should return 'todo updated', if everything goes right", async () => {
-    //         const message = "todo updated";
-    //         req.params = { id: 0 };
-    //         mockFindByIdAndUpdate.mockResolvedValue(message);
-    //         await controller.updateTodo(req, res);
-
-    //         expect(mockFindByIdAndUpdate).toHaveBeenCalled();
-    //         expect(res.status).toHaveBeenCalledWith(200);
-    //         expect(res.json).toHaveBeenCalledWith({ message: message });
-    //     });
-
         it("Should return 'required id missing.', if :id params is not present", async () => {
+            const todoData = { id: 1, title: "Sample Todo" }; 
             const message = "Invalid or missing todo ID.";
-            req.params = { };
-            mockFindByIdAndUpdate.mockResolvedValue(message);
+            req.params = {};
+            mockFindByIdAndUpdate.mockResolvedValue(todoData);
             await controller.updateTodo(req, res);
 
             expect(mockFindByIdAndUpdate).not.toHaveBeenCalled();
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ message: message });
         });
+        it("Should return 'todo updated', if everything goes right", async () => {
+            const todoData = { id: 1, title: "Sample Todo" }; //Mock Data
+            const message = "Todo updated successfully";
+            req.body = { accomplished: true, completed: Date.now() };
+            req.params = { id: 1 };
+            mockFindByIdAndUpdate.mockResolvedValue(todoData);
+            await controller.updateTodo(req, res);
+
+            expect(mockFindByIdAndUpdate).toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ message: message, updatedTodo: { "id": 1, "title": "Sample Todo" } });
+        });
     });
 
     describe("for DELETE deleteTodo functions", () => {
-        // it("Should return 'todo deleted', if everythingn goes right", async () => {
-        //     const message = 'todo deleted';
-        //     req.params = { id: 0 };
-        //     mockFindByIdAndDelete.mockResolvedValue(message);
-        //     await controller.deleteTodo(req, res);
-
-        //     expect(mockFindByIdAndDelete).toHaveBeenCalled();
-        //     expect(res.status).toHaveBeenCalledWith(200);
-        //     expect(res.json).toHaveBeenCalledWith({ message: message });
-        // });
-
         it("Should return 'required id missing.', if :id is missing", async () => {
             const message = 'required id missing.';
             req.params = {};
             mockFindByIdAndDelete.mockResolvedValue(message);
+
             await controller.deleteTodo(req, res);
 
             expect(mockFindByIdAndDelete).not.toHaveBeenCalled();
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ message: message });
+        });
+
+        it("Should return 'todo deleted', if everythingn goes right", async () => {
+            const todoData = { id: 1, title: "Sample Todo" }; //Mock Data
+            req.params = { id: 1 };
+            mockFindByIdAndDelete.mockResolvedValue(todoData);
+
+            await controller.deleteTodo(req, res);
+
+            expect(mockFindByIdAndDelete).toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ message: 'todo deleted' });
         });
     })
 });
